@@ -21,7 +21,6 @@ def createConfigmap(pod_name: str):
     except:
         return {"Error:" "Erorr creating configmap"}
    
-
 def deleteConfigMap(cm: str):
     print(cm)
     CoreV1Api.delete_namespaced_config_map(name=cm,namespace="default")
