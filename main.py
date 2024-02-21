@@ -25,13 +25,17 @@ def deleteConfigMap(cm: str):
     print(cm)
     CoreV1Api.delete_namespaced_config_map(name=cm,namespace="default")
 
+if __name__ == "__main__":
 #Capture Events of pod creation in default namespace. 
-for event in watch.stream(func=CoreV1Api.list_namespaced_pod,namespace="default"):
-    if event['type'] == "ADDED":
-        pod_name = event['object'].metadata.name
-        print(f'Pod with name {pod_name} Added')
-        createConfigmap(pod_name)
-    if event['type'] == "DELETED":
-        pod_name = event['object'].metadata.name
-        print(f'Pod with name {pod_name} Deleted')
-        deleteConfigMap(f'pod-{pod_name}')
+    try:
+        for event in watch.stream(func=CoreV1Api.list_namespaced_pod,namespace="default"):
+            if event['type'] == "ADDED":
+                pod_name = event['object'].metadata.name
+                print(f'Pod with name {pod_name} Added')
+                createConfigmap(pod_name)
+            if event['type'] == "DELETED":
+                pod_name = event['object'].metadata.name
+                print(f'Pod with name {pod_name} Deleted')
+                deleteConfigMap(f'pod-{pod_name}')
+    except KeyboardInterrupt:
+        print("Got SIGINT. EXITING...")
