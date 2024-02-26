@@ -19,12 +19,14 @@ def createConfigmap(pod_name: str):
         #print(CoreV1Api.read_namespaced_config_map(name=f'pod-{pod_name}'))
         CoreV1Api.create_namespaced_config_map(namespace="default", body=cmap)
     except:
-        return {"Error:" "Erorr creating configmap"}
+        return {"Error":"Erorr creating configmap"}
    
 def deleteConfigMap(cm: str):
-    print(cm)
-    CoreV1Api.delete_namespaced_config_map(name=cm,namespace="default")
-
+    try:
+        CoreV1Api.delete_namespaced_config_map(name=cm,namespace="default")
+    except:
+        return {"Error":"Error deleting configmap"}
+    
 if __name__ == "__main__":
 #Capture Events of pod creation in default namespace. 
     try:
